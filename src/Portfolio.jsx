@@ -3,6 +3,7 @@ import { Moon, Sun, Github, Linkedin, Mail, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
 import './Portfolio.css';
+import profilePic from './assets/Pic.jpg'; // use the new Pic.jpg from assets
 
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(true);
@@ -10,19 +11,28 @@ export default function Portfolio() {
   const [typedText, setTypedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
   const [roleIndex, setRoleIndex] = useState(0);
+  // show update popup every page load (not persisted)
   const [showUpdateModal, setShowUpdateModal] = useState(true);
-  const roles = ['Software QA Tester Engineer', 'Front-End Developer'];
-
   useEffect(() => {
-    const root = document.documentElement;
-    if (darkMode) {
-      root.classList.add('dark');
-      root.style.colorScheme = 'dark';
-    } else {
-      root.classList.remove('dark');
-      root.style.colorScheme = 'light';
-    }
-  }, [darkMode]);
+    // ensure modal opens on mount (works on mobile & desktop)
+    setShowUpdateModal(true);
+  }, []);
+
+  // lock background scroll while modal open
+  useEffect(() => {
+    document.body.style.overflow = showUpdateModal ? 'hidden' : '';
+    return () => { document.body.style.overflow = ''; };
+  }, [showUpdateModal]);
+
+  // close on Escape
+  useEffect(() => {
+    if (!showUpdateModal) return;
+    const onKey = (e) => { if (e.key === 'Escape') setShowUpdateModal(false); };
+    window.addEventListener('keydown', onKey);
+    return () => window.removeEventListener('keydown', onKey);
+  }, [showUpdateModal]);
+
+  const roles = ['Software QA Tester Engineer', 'Front-End Developer'];
 
   useEffect(() => {
     const currentRole = roles[roleIndex];
@@ -159,90 +169,258 @@ export default function Portfolio() {
     }
   ];
 
-  useEffect(() => {
-    document.body.style.overflow = showUpdateModal ? 'hidden' : '';
-    return () => { document.body.style.overflow = ''; };
-  }, [showUpdateModal]);
+  // close modals on outside click
+  const closeModal = (setter) => (e) => {
+    if (e.target.closest('.modal-content')) return;
+    setter(false);
+  };
 
-  const scrollToSection = (section) => {
-    setActiveSection(section);
-    const element = document.getElementById(section);
-    if (element) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+  // missing modal / mobile-nav state (prevents runtime ReferenceError -> white screen)
+  const [showEmailModal, setShowEmailModal] = useState(false);
+  const [showWorkModal, setShowWorkModal] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+
+  // helper to scroll to sections (used in header / mobile nav)
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const headerOffset = 72; // adjust if your header height differs
+    const top = el.getBoundingClientRect().top + window.scrollY - headerOffset;
+    window.scrollTo({ top, behavior: 'smooth' });
   };
 
   return (
     <div className={`min-h-screen transition-colors duration-300 ${darkMode ? 'dark' : ''}`}>
       {/* Update modal (centered) */}
       {showUpdateModal && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-[9999] px-4">
-          <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl p-8 max-w-lg w-full shadow-xl text-center">
-            <h3 className="text-xl font-semibold mb-3">Some sections are still being updated</h3>
-            <p className="mb-6">Real content and details will be added soon!</p>
-            <button
-              onClick={() => setShowUpdateModal(false)}
-              className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
-            >
-              Noted!
-            </button>
+        <div
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4"
+          onClick={() => setShowUpdateModal(false)}
+        >
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="update-modal-title"
+            onClick={(e) => e.stopPropagation()}
+            className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl p-6 sm:p-8 max-w-md w-full max-h-[90vh] overflow-auto shadow-xl"
+          >
+            <h3 id="update-modal-title" className="text-lg sm:text-xl font-semibold mb-3 text-center">
+              Some sections are still being updated
+            </h3>
+            <p className="mb-6 text-center text-sm text-gray-700 dark:text-gray-300">
+              Real content and details will be added soon!
+            </p>
+            <div className="flex justify-center">
+              <button
+                onClick={() => setShowUpdateModal(false)}
+                className="px-6 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700 focus:outline-none w-full sm:w-auto"
+              >
+                Noted!
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Email modal */}
+      {showEmailModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-9999 px-4">
+          <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl p-6 max-w-sm w-full shadow-xl text-center">
+            <h3 className="text-lg font-semibold mb-2">Email me</h3>
+            <p className="mb-4 text-sm wrap-break-word">abdulwahid01.abdul@gmail.com</p>
+            <div className="flex justify-center gap-3">
+              <button
+                onClick={() => setShowEmailModal(false)}
+                className="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700"
+              >
+                Exit
+              </button>
+              <a
+                href="https://mail.google.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+              >
+                Open Gmail
+              </a>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Work Experience modal (roadmap style) */}
+      {showWorkModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 px-4">
+          <div className="bg-white dark:bg-gray-900 rounded-xl shadow-xl max-w-3xl w-full max-h-[90vh] overflow-auto p-6">
+            <div className="flex items-start justify-between mb-4">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-gray-100">Work Experience</h3>
+              <button
+                onClick={() => setShowWorkModal(false)}
+                className="text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white rounded-md p-2"
+                aria-label="Close work experience"
+              >
+                ✕
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              {/* Current - Socia */}
+              <div className="flex gap-4 items-start">
+                <div className="flex flex-col items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-600 mt-1" />
+                  <div className="w-px bg-gray-200 dark:bg-gray-700 flex-1" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Software QA Engineer</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Socia, Taguig City</p>
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">10/2025 – Present</div>
+                  </div>
+                  <ul className="list-disc pl-5 mt-2 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+                    <li>Serve as the one‑man QA for the team, independently managing all testing responsibilities across multiple projects.</li>
+                    <li>Handle numerous large, high‑traffic client websites, ensuring quality, stability, and seamless user experience.</li>
+                    <li>Perform comprehensive manual and automation testing, including functional, regression, and cross‑browser testing.</li>
+                    <li>Create clear and detailed bug reports and oversee ticketing and issue‑tracking processes.</li>
+                    <li>Develop and execute test plans, scenarios, and test cases tailored to each assigned website.</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Previous - IT STORE PERSONNEL */}
+              <div className="flex gap-4 items-start">
+                <div className="flex flex-col items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-600 mt-1" />
+                  <div className="w-px bg-gray-200 dark:bg-gray-700 flex-1" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">IT STORE PERSONNEL</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">PC Express, San Juan City</p>
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">09/2025 – 10/2025</div>
+                  </div>
+                  <ul className="list-disc pl-5 mt-2 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+                    <li>Provided sales support and product recommendations to customers, improving overall client satisfaction.</li>
+                    <li>Assembled, configured, and tested PCs and IT equipment, ensuring optimal performance before handover.</li>
+                    <li>Performed software installation, troubleshooting, and product demonstrations for customers.</li>
+                    <li>Maintained inventory management and documentation of IT products and stocks.</li>
+                    <li>Supported both technical and sales operations, bridging customer needs with technical expertise.</li>
+                  </ul>
+                </div>
+              </div>
+
+              {/* Earlier - Intern */}
+              <div className="flex gap-4 items-start">
+                <div className="flex flex-col items-center">
+                  <div className="w-3 h-3 rounded-full bg-blue-600 mt-1" />
+                  <div className="w-px bg-gray-200 dark:bg-gray-700 flex-1" />
+                </div>
+                <div className="flex-1">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">IT DESKTOP SUPPORT ENGINEER INTERN</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-400">Tech Mahindra, Eastwood Q.C</p>
+                    </div>
+                    <div className="text-sm text-gray-500 dark:text-gray-400">04/2025 – 06/2025</div>
+                  </div>
+                  <ul className="list-disc pl-5 mt-2 text-gray-700 dark:text-gray-300 space-y-1 text-sm">
+                    <li>Diagnosed and resolved hardware, software, and network issues, ensuring system reliability and performance.</li>
+                    <li>Assisted with system reimaging, configuration, and deployment, validating functionality post-installation.</li>
+                    <li>Managed user access and permissions in Active Directory, supporting secure environments.</li>
+                    <li>Documented technical issues, test results, and resolutions to support process improvements.</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}
 
       <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
         {/* Header */}
-        <header className="fixed top-0 w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-800">
-          <nav className="container mx-auto px-6 py-4">
-            <div className="flex items-center justify-between">
+        <header className="fixed top-0 w-full bg-white/90 dark:bg-gray-900/90 backdrop-blur-md z-50 border-b border-gray-200 dark:border-gray-800">
+          <nav className="container mx-auto px-4 sm:px-6 py-3 flex items-center justify-between">
+            <div className="flex items-center gap-4">
               <div className="text-2xl font-bold bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
                 AWMA
               </div>
-              
-              <div className="flex items-center space-x-8">
-                <button onClick={() => scrollToSection('home')} className={`hover:text-blue-600 transition-colors ${activeSection === 'home' ? 'text-blue-600 font-semibold' : ''}`}>Home</button>
-                <button onClick={() => scrollToSection('about')} className={`hover:text-blue-600 transition-colors ${activeSection === 'about' ? 'text-blue-600 font-semibold' : ''}`}>About Me</button>
-                <button onClick={() => scrollToSection('skills')} className={`hover:text-blue-600 transition-colors ${activeSection === 'skills' ? 'text-blue-600 font-semibold' : ''}`}>Skills</button>
-                <button onClick={() => scrollToSection('projects')} className={`hover:text-blue-600 transition-colors ${activeSection === 'projects' ? 'text-blue-600 font-semibold' : ''}`}>Projects</button>
-                <button onClick={() => scrollToSection('tested')} className={`hover:text-blue-600 transition-colors ${activeSection === 'tested' ? 'text-blue-600 font-semibold' : ''}`}>Tested</button>
-                <Button onClick={() => scrollToSection('hire')} className="bg-blue-600 hover:bg-blue-700">
-                  Hire Me
-                </Button>
-              </div>
+            </div>
 
+            {/* Desktop nav */}
+            <div className="hidden md:flex items-center space-x-6">
+              <button onClick={() => { setMobileNavOpen(false); scrollToSection('home'); }} className={`hover:text-blue-600 transition-colors ${activeSection === 'home' ? 'text-blue-600 font-semibold' : ''}`}>Home</button>
+              <button onClick={() => { setMobileNavOpen(false); scrollToSection('about'); }} className={`hover:text-blue-600 transition-colors ${activeSection === 'about' ? 'text-blue-600 font-semibold' : ''}`}>About Me</button>
+              <button onClick={() => { setMobileNavOpen(false); scrollToSection('skills'); }} className={`hover:text-blue-600 transition-colors ${activeSection === 'skills' ? 'text-blue-600 font-semibold' : ''}`}>Skills</button>
+              <button onClick={() => { setMobileNavOpen(false); scrollToSection('projects'); }} className={`hover:text-blue-600 transition-colors ${activeSection === 'projects' ? 'text-blue-600 font-semibold' : ''}`}>Projects</button>
+              <button onClick={() => { setMobileNavOpen(false); scrollToSection('tested'); }} className={`hover:text-blue-600 transition-colors ${activeSection === 'tested' ? 'text-blue-600 font-semibold' : ''}`}>Tested</button>
+              <button onClick={() => setShowWorkModal(true)} className="hover:text-blue-600 transition-colors">Work Experience</button>
+              <Button onClick={() => { setMobileNavOpen(false); scrollToSection('hire'); }} className="bg-blue-600 hover:bg-blue-700 hidden lg:inline-flex">
+                Hire Me
+              </Button>
+            </div>
+
+            <div className="flex items-center gap-3">
               <button
                 onClick={() => setDarkMode(!darkMode)}
                 className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
+                aria-label="Toggle theme"
               >
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
               </button>
+
+              {/* Mobile menu button */}
+              <button
+                className="md:hidden p-2 rounded-md ml-1 hover:bg-gray-100 dark:hover:bg-gray-800 transition"
+                onClick={() => setMobileNavOpen(!mobileNavOpen)}
+                aria-label="Toggle menu"
+              >
+                <svg className="w-6 h-6 text-gray-700 dark:text-gray-200" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" d={mobileNavOpen ? "M6 18L18 6M6 6l12 12" : "M4 6h16M4 12h16M4 18h16"} />
+                </svg>
+              </button>
             </div>
           </nav>
+
+          {/* Mobile nav panel */}
+          <div className={`md:hidden ${mobileNavOpen ? 'block' : 'hidden'}`} aria-hidden={!mobileNavOpen}>
+            <div className={`px-4 pb-4 space-y-2 bg-white dark:bg-gray-900 border-t border-gray-200 dark:border-gray-800 ${mobileNavOpen ? '' : 'pointer-events-none'}`}>
+               <button onClick={() => { setMobileNavOpen(false); scrollToSection('home'); }} className="w-full text-left py-2">Home</button>
+               <button onClick={() => { setMobileNavOpen(false); scrollToSection('about'); }} className="w-full text-left py-2">About Me</button>
+               <button onClick={() => { setMobileNavOpen(false); scrollToSection('skills'); }} className="w-full text-left py-2">Skills</button>
+               <button onClick={() => { setMobileNavOpen(false); scrollToSection('projects'); }} className="w-full text-left py-2">Projects</button>
+               <button onClick={() => { setMobileNavOpen(false); scrollToSection('tested'); }} className="w-full text-left py-2">Tested</button>
+               <button onClick={() => { setMobileNavOpen(false); setShowWorkModal(true); }} className="w-full text-left py-2">Work Experience</button>
+               <button onClick={() => { setMobileNavOpen(false); scrollToSection('hire'); }} className="w-full text-left py-2">Hire Me</button>
+             </div>
+           </div>
         </header>
 
         {/* Hero Section */}
-        <section id="home" className="pt-32 pb-20 px-6">
-          <div className="container mx-auto max-w-6xl">
+        <section id="home" className="pt-28 pb-16 px-4 sm:px-6">
+          <div className="container mx-auto max-w-5xl">
             <div className="text-center">
-              <h1 className="text-5xl md:text-7xl font-bold mb-6">
+              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
                 Hi, I'm <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ABDULWAHID ABDUL</span>
               </h1>
-              <div className="text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-8 h-12 flex items-center justify-center">
+              <div className="text-base sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-6 h-12 flex items-center justify-center">
                 <span className="mr-2">{typedText}</span>
                 <span className="animate-blink">|</span>
               </div>
-              <p className="text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-12">
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
                 Crafting elegant solutions through code and ensuring quality through rigorous testing. Recent graduate with hands-on experience in front-end development and QA testing.
               </p>
-              <div className="flex justify-center gap-4">
+              <div className="flex flex-col sm:flex-row justify-center gap-3">
                 <Button
                   size="lg"
-                  className="bg-blue-600 hover:bg-blue-700"
+                  className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700"
                   onClick={() => scrollToSection('projects')}
                 >
                   View Projects
                 </Button>
-                <Button size="lg" variant="outline">
+                <Button size="lg" variant="outline" className="w-full sm:w-auto">
                   Download CV
                 </Button>
               </div>
@@ -250,31 +428,62 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* About Me Section */}
-        <section id="about" className="py-20 px-6 bg-gray-50 dark:bg-gray-800/50">
-          <div className="container mx-auto max-w-4xl">
-            <h2 className="text-4xl font-bold mb-8 text-center">About Me</h2>
-            <div className="prose dark:prose-invert max-w-none">
-              <p className="text-lg text-gray-600 dark:text-gray-400 text-center mb-6">
-                I'm a recent graduate with a strong foundation in quality assurance and front-end development. I have
-                hands-on experience from projects and internships, building web applications and testing them to ensure
-                they meet high standards of quality and performance.
-              </p>
-              <p className="text-lg text-gray-600 dark:text-gray-400 text-center">
-                When I'm not coding or testing, you can find me exploring new technologies, contributing to 
-                open-source projects, or sharing knowledge with the developer community.
-              </p>
-            </div>
-            <div className="flex justify-center gap-6 mt-8">
-              <a href="#" className="p-3 bg-white dark:bg-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <Github className="w-6 h-6" />
-              </a>
-              <a href="#" className="p-3 bg-white dark:bg-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <Linkedin className="w-6 h-6" />
-              </a>
-              <a href="#" className="p-3 bg-white dark:bg-gray-900 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                <Mail className="w-6 h-6" />
-              </a>
+        {/* About Me Section (image left, content right) */}
+        <section id="about" className="py-16 px-4 sm:px-6 bg-gray-800 text-white">
+          <div className="container mx-auto max-w-5xl">
+            <h2 className="text-3xl sm:text-4xl font-bold mb-8 text-center">About Me</h2>
+
+            <div className="grid md:grid-cols-2 gap-8 items-center">
+              {/* Left: Profile image */}
+              <div className="flex justify-center md:justify-end">
+                <div className="w-56 h-56 md:w-64 md:h-64 rounded-xl overflow-hidden shadow-2xl ring-1 ring-gray-200 dark:ring-gray-700 transform hover:scale-105 transition-transform duration-300 bg-white dark:bg-gray-800">
+                  <img src={profilePic} alt="Profile" className="w-full h-full object-cover" />
+                </div>
+              </div>
+
+              {/* Right: About text card */}
+              <div className="bg-transparent rounded-2xl p-8">
+                <p className="text-gray-200 dark:text-gray-300 mb-4 text-lg">
+                  I'm a recent graduate with a strong foundation in quality assurance and front-end development. I have
+                  hands-on experience from projects and internships, building web applications and testing them to ensure
+                  they meet high standards of quality and performance.
+                </p>
+
+                <p className="text-gray-400 dark:text-gray-400 mb-6 text-lg">
+                  When I'm not coding or testing, you can find me exploring new technologies, contributing to open-source
+                  projects, or sharing knowledge with the developer community.
+                </p>
+
+                <div className="flex items-center justify-end gap-4 mt-6">
+                  <a
+                    href="https://github.com/capzlock35"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="GitHub (opens in new tab)"
+                    className="p-3 bg-black/20 rounded-full hover:bg-black/30 transition"
+                  >
+                    <Github className="w-5 h-5 text-white" />
+                  </a>
+
+                  <a
+                    href="https://www.linkedin.com/in/abdulwahidabdul"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="LinkedIn (opens in new tab)"
+                    className="p-3 bg-blue-700 rounded-full hover:bg-blue-800 transition"
+                  >
+                    <Linkedin className="w-5 h-5 text-white" />
+                  </a>
+
+                  <button
+                    onClick={() => setShowEmailModal(true)}
+                    aria-label="Email"
+                    className="p-3 bg-black/20 rounded-full hover:bg-black/30 transition"
+                  >
+                    <Mail className="w-5 h-5 text-white" />
+                  </button>
+                </div>
+              </div>
             </div>
           </div>
         </section>
@@ -477,7 +686,7 @@ export default function Portfolio() {
                         {website.features.map((feature, i) => (
                           <li key={i} className="flex items-start">
                             <span className="text-green-600 mr-2">✓</span>
-                            {feature}
+                            <span>{feature}</span>
                           </li>
                         ))}
                       </ul>

@@ -1,4 +1,3 @@
-
 /* Typing cursor animation */
 @keyframes blink {
   0%, 50% {
@@ -46,4 +45,24 @@
 
 .animate-scroll-right:hover {
   animation-play-state: paused;
+}
+
+/* Work experience modal tweaks */
+@media (max-width: 640px) {
+  .work-timeline-card { padding: 1rem; }
+  /* make timeline markers align nicely on small screens */
+}
+
+/* (Optional) small visual improvements for the timeline marker */
+/* No JS needed; Tailwind utility classes used for main styling. */
+
+/* Update modal: comfortable spacing on small screens */
+.update-modal {
+  -webkit-overflow-scrolling: touch;
+  touch-action: manipulation;
+}
+
+/* Slightly reduce modal padding on very small screens */
+@media (max-width: 420px) {
+  .update-modal { padding: 0.75rem; border-radius: 0.75rem; }
 }
