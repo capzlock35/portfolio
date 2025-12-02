@@ -4,6 +4,11 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './com
 import { Button } from './components/ui/button';
 import './Portfolio.css';
 import profilePic from './assets/Pic.jpg'; // use the new Pic.jpg from assets
+import lootLanding from './assets/LootBxLanding.png';
+import lootLogo from './assets/LootBxLogo.jpg';
+import alacincoLanding from './assets/AlacincoLanding.png';
+import alacincoLogo from './assets/AlacincoLogo.png';
+import PixelBlast from '../react-pixelblast/src/components/PixelBlast';
 
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(true);
@@ -86,27 +91,62 @@ export default function Portfolio() {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const skills = [
-    { name: 'HTML', icon: '🌐' },
-    { name: 'CSS', icon: '🎨' },
-    { name: 'JavaScript', icon: '⚡' },
-    { name: 'React', icon: '⚛️' },
-    { name: 'TypeScript', icon: '📘' },
-    { name: 'Tailwind CSS', icon: '💨' },
-    { name: 'Next.js', icon: '▲' },
-    { name: 'Node.js', icon: '🟢' },
-    { name: 'Express', icon: '🚂' },
-    { name: 'MongoDB', icon: '🍃' },
-    { name: 'PostgreSQL', icon: '🐘' },
-    { name: 'Python', icon: '🐍' },
-    { name: 'Selenium', icon: '🧪' },
-    { name: 'Jest', icon: '🃏' },
-    { name: 'Cypress', icon: '🌲' },
-    { name: 'Postman', icon: '📮' },
-    { name: 'Git', icon: '📦' },
-    { name: 'Docker', icon: '🐋' },
-    { name: 'Jira', icon: '📊' },
-    { name: 'Figma', icon: '🎯' }
+  // categorized technologies (use colored brand icons where possible)
+  const techCategories = [
+    {
+      category: 'Frontend',
+      items: [
+        { name: 'React', url: 'https://reactjs.org/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/react/react-original.svg' },
+        { name: 'HTML', url: 'https://developer.mozilla.org/en-US/docs/Web/HTML', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/html5/html5-original.svg' },
+        { name: 'CSS', url: 'https://developer.mozilla.org/en-US/docs/Web/CSS', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/css3/css3-original.svg' },
+        { name: 'JavaScript', url: 'https://developer.mozilla.org/en-US/docs/Web/JavaScript', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/javascript/javascript-original.svg' },
+        { name: 'Tailwind CSS', url: 'https://tailwindcss.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/tailwindcss/tailwindcss-original.svg' }
+      ]
+    },
+    {
+      category: 'Backend / DB',
+      items: [
+        { name: 'Python', url: 'https://www.python.org/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/python/python-original.svg' },
+        { name: 'MongoDB', url: 'https://www.mongodb.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mongodb/mongodb-original.svg' },
+        { name: 'MySQL', url: 'https://www.mysql.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mysql/mysql-original.svg' }
+      ]
+    },
+    {
+      category: 'Testing & Automation',
+      items: [
+        { name: 'Playwright', url: 'https://playwright.dev/', logo: 'https://logo.clearbit.com/playwright.dev' },
+        { name: 'Pytest', url: 'https://docs.pytest.org/', logo: 'https://logo.clearbit.com/pytest.org' },
+        { name: 'Postman', url: 'https://www.postman.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/postman/postman-original.svg' },
+        { name: 'Selenium', url: 'https://www.selenium.dev/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/selenium/selenium-original.svg' }
+      ]
+    },
+    {
+      category: 'Tools & Collaboration',
+      items: [
+        { name: 'GitHub', url: 'https://github.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/github/github-original.svg' },
+        { name: 'VS Code', url: 'https://code.visualstudio.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/vscode/vscode-original.svg' },
+        { name: 'Jira', url: 'https://www.atlassian.com/software/jira', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg' },
+        { name: 'PyCharm', url: 'https://www.jetbrains.com/pycharm/', logo: 'https://logo.clearbit.com/pycharm.jetbrains.com' },
+        { name: 'TestRail', url: 'https://www.gurock.com/testrail', logo: 'https://logo.clearbit.com/gurock.com' },
+        { name: 'Bugzilla', url: 'https://www.bugzilla.org/', logo: 'https://logo.clearbit.com/bugzilla.org' }
+      ]
+    },
+    {
+      category: 'Productivity & Remote',
+      items: [
+        { name: 'Google Workspace', url: 'https://workspace.google.com/', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/google/google-original.svg' },
+        { name: 'MS Office', url: 'https://www.microsoft.com/microsoft-365', logo: 'https://logo.clearbit.com/microsoft.com' },
+        { name: 'AnyDesk', url: 'https://anydesk.com/', logo: 'https://logo.clearbit.com/anydesk.com' },
+        { name: 'Redmine', url: 'https://www.redmine.org/', logo: 'https://logo.clearbit.com/redmine.org' }
+      ]
+    },
+    {
+      category: 'Hardware / Troubleshooting',
+      items: [
+        // non-clickable; will render wrench SVG
+        { name: 'Computer Troubleshooting', url: null, logo: null, clickable: false }
+      ]
+    }
   ];
 
   const projects = [
@@ -137,35 +177,48 @@ export default function Portfolio() {
   ];
 
   const testedWebsites = [
+    // LootBx (keeps existing images)
     {
-      title: 'Live Streaming Platform',
-      description: 'Comprehensive QA testing for real-time video streaming platform with chat and analytics',
-      type: 'Manual & Automated Testing',
-      features: ['Video streaming', 'Live chat', 'User authentication', 'Payment processing']
+      title: 'LootBx',
+      description: 'Streaming platform with tokenized rewards and airdrops for viewers.',
+      type: 'Streaming / DropLoot / Tokenized',
+      features: [
+        'Video streaming stability & latency',
+        'Live chat and real-time interactions',
+        'Authentication, payments & reward flows',
+        'Token & reward distribution',
+        'And More'
+      ],
+      url: 'https://lootbx.com/',
+      landing: lootLanding,
+      logo: lootLogo
     },
+    // Alacinco (keeps images)
     {
-      title: 'CRM System',
-      description: 'End-to-end testing of customer relationship management system for enterprise clients',
-      type: 'Functional & Integration Testing',
-      features: ['Contact management', 'Sales pipeline', 'Reporting dashboard', 'Email integration']
+      title: 'Alacinco',
+      description: 'Airbnb-style booking platform with crypto payment integration.',
+      type: 'AirBnb - Property Booking Platform',
+      features: [
+        'Booking flow & calendar availability',
+        'Crypto payment integration',
+        'Search, filters & listing UX',
+        'Security & data validation',
+        'And More'
+      ],
+      url: 'https://alacinco.com/',
+      landing: alacincoLanding,
+      logo: alacincoLogo
     },
+    // Placeholder "More" card (spans second row)
     {
-      title: 'E-Commerce Platform',
-      description: 'Quality assurance for multi-vendor marketplace with complex payment flows',
-      type: 'Performance & Security Testing',
-      features: ['Product catalog', 'Shopping cart', 'Checkout process', 'Inventory management']
-    },
-    {
-      title: 'Booking System',
-      description: 'Testing of appointment scheduling platform with calendar integration and notifications',
-      type: 'UI/UX & API Testing',
-      features: ['Calendar booking', 'Email reminders', 'Payment gateway', 'Admin dashboard']
-    },
-    {
-      title: 'ERP Solution',
-      description: 'Comprehensive testing of enterprise resource planning system for manufacturing',
-      type: 'System & Regression Testing',
-      features: ['Inventory control', 'Financial reporting', 'HR management', 'Supply chain']
+      title: 'More',
+      description: 'Additional websites tested — content will be updated soon.',
+      type: '',
+      features: [],
+      url: '#',
+      landing: null,
+      logo: null,
+      placeholder: true
     }
   ];
 
@@ -399,7 +452,31 @@ export default function Portfolio() {
         </header>
 
         {/* Hero Section */}
-        <section id="home" className="pt-28 pb-16 px-4 sm:px-6">
+        <section id="home" className="relative overflow-hidden pt-28 pb-16 px-4 sm:px-6">
+          <div className="absolute inset-0 -z-10">
+            <div style={{ width: '100%', height: '520px', position: 'relative' }}>
+              <PixelBlast
+                variant="circle"
+                pixelSize={6}
+                color="#B19EEF"
+                patternScale={3}
+                patternDensity={1.2}
+                pixelSizeJitter={0.5}
+                enableRipples
+                rippleSpeed={0.4}
+                rippleThickness={0.12}
+                rippleIntensityScale={1.5}
+                liquid
+                liquidStrength={0.12}
+                liquidRadius={1.2}
+                liquidWobbleSpeed={5}
+                speed={0.6}
+                edgeFade={0.25}
+                transparent
+                className="w-full h-full"
+              />
+            </div>
+          </div>
           <div className="container mx-auto max-w-5xl">
             <div className="text-center">
               <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
@@ -532,98 +609,63 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Skills Section */}
-        <section id="skills" className="py-20 px-6 bg-gray-50 dark:bg-gray-800/50 overflow-hidden">
+        {/* Skills & Technologies - categorized with logos */}
+        <section id="skills" className="py-20 px-6 bg-gray-50 dark:bg-gray-800/50">
           <div className="container mx-auto max-w-6xl">
-            <h2 className="text-4xl font-bold mb-12 text-center">Skills & Technologies</h2>
-            <div className="space-y-8">
-              {/* First Row - Scroll Right to Left */}
-              <div className="relative">
-                <div className="flex animate-scroll-left">
-                  {/* First set of skills */}
-                  {skills.slice(0, 10).map((skill, index) => (
-                    <div
-                      key={`skill-1-${index}`}
-                      className="shrink-0 mx-4 group"
-                    >
-                      <div className="relative">
-                        <div className="w-24 h-24 bg-white dark:bg-gray-900 rounded-2xl shadow-lg flex items-center justify-center text-4xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30">
-                          {skill.icon}
-                        </div>
-                        {/* Tooltip */}
-                        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-                          <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-3 py-1 rounded-lg text-sm font-semibold whitespace-nowrap">
-                            {skill.name}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {/* Duplicate set for seamless loop */}
-                  {skills.slice(0, 10).map((skill, index) => (
-                    <div
-                      key={`skill-dup-1-${index}`}
-                      className="shrink-0 mx-4 group"
-                    >
-                      <div className="relative">
-                        <div className="w-24 h-24 bg-white dark:bg-gray-900 rounded-2xl shadow-lg flex items-center justify-center text-4xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:bg-blue-50 dark:group-hover:bg-blue-900/30">
-                          {skill.icon}
-                        </div>
-                        {/* Tooltip */}
-                        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-                          <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-3 py-1 rounded-lg text-sm font-semibold whitespace-nowrap">
-                            {skill.name}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+            <h2 className="text-4xl font-bold mb-8 text-center">Skills & Technologies</h2>
 
-              {/* Second Row - Scroll Left to Right */}
-              <div className="relative">
-                <div className="flex animate-scroll-right">
-                  {/* First set of skills */}
-                  {skills.slice(10).map((skill, index) => (
-                    <div
-                      key={`skill-2-${index}`}
-                      className="shrink-0 mx-4 group"
-                    >
-                      <div className="relative">
-                        <div className="w-24 h-24 bg-white dark:bg-gray-900 rounded-2xl shadow-lg flex items-center justify-center text-4xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:bg-purple-50 dark:group-hover:bg-purple-900/30">
-                          {skill.icon}
-                        </div>
-                        {/* Tooltip */}
-                        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-                          <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-3 py-1 rounded-lg text-sm font-semibold whitespace-nowrap">
-                            {skill.name}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
-                  {/* Duplicate set for seamless loop */}
-                  {skills.slice(10).map((skill, index) => (
-                    <div
-                      key={`skill-dup-2-${index}`}
-                      className="shrink-0 mx-4 group"
-                    >
-                      <div className="relative">
-                        <div className="w-24 h-24 bg-white dark:bg-gray-900 rounded-2xl shadow-lg flex items-center justify-center text-4xl transition-all duration-300 group-hover:scale-110 group-hover:shadow-xl group-hover:bg-purple-50 dark:group-hover:bg-purple-900/30">
-                          {skill.icon}
-                        </div>
-                        {/* Tooltip */}
-                        <div className="absolute -bottom-10 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none z-10">
-                          <div className="bg-gray-900 dark:bg-gray-100 text-white dark:text-gray-900 px-3 py-1 rounded-lg text-sm font-semibold whitespace-nowrap">
-                            {skill.name}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  ))}
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {techCategories.map((cat) => (
+                <div key={cat.category} className="bg-white dark:bg-gray-900 rounded-xl p-6 shadow-sm">
+                  <h3 className="font-semibold mb-4">{cat.category}</h3>
+                  <div className="flex flex-wrap gap-3">
+                    {cat.items.map((it) => {
+                      const isClickable = it.clickable === false ? false : Boolean(it.url);
+                      // anchor vs plain div based on clickable
+                      const Wrapper = isClickable ? 'a' : 'div';
+                      const wrapperProps = isClickable
+                        ? {
+                            href: it.url || '#',
+                            target: it.url && it.url !== '#' ? '_blank' : '_self',
+                            rel: it.url && it.url !== '#' ? 'noopener noreferrer' : undefined,
+                            className: 'flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-800 rounded-md hover:shadow transition text-sm'
+                          }
+                        : { className: 'flex items-center gap-2 px-3 py-2 bg-gray-50 dark:bg-gray-800 rounded-md text-sm' };
+
+                      return (
+                        <Wrapper key={it.name} {...wrapperProps}>
+                          {/* Computer Troubleshooting -> show inline wrench svg */}
+                          {it.name === 'Computer Troubleshooting' ? (
+                            <span className="w-5 h-5 inline-flex items-center justify-center">
+                              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" className="text-gray-700 dark:text-gray-300">
+                                <path d="M21 8v6a2 2 0 0 1-2 2h-3" />
+                                <path d="M14 8L9 13" />
+                                <path d="M10 3L21 14" />
+                                <path d="M7 21a4 4 0 0 1-4-4 4 4 0 0 1 4-4h3" />
+                              </svg>
+                            </span>
+                          ) : it.logo ? (
+                            <img
+                              src={it.logo}
+                              alt={`${it.name} logo`}
+                              className="w-5 h-5 object-contain"
+                              onError={(e) => {
+                                // replace broken logo with a small placeholder showing first letter
+                                const ch = encodeURIComponent(it.name.charAt(0));
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = `https://via.placeholder.com/24/cccccc/000000?text=${ch}`;
+                              }}
+                            />
+                          ) : (
+                            <div className="w-5 h-5 flex items-center justify-center bg-gray-200 dark:bg-gray-700 rounded text-xs">{it.name.charAt(0)}</div>
+                          )}
+                          <span>{it.name}</span>
+                        </Wrapper>
+                      );
+                    })}
+                  </div>
                 </div>
-              </div>
+              ))}
             </div>
           </div>
         </section>
@@ -661,39 +703,78 @@ export default function Portfolio() {
         </section>
 
         {/* Websites Tested Section */}
-        <section id="tested" className="py-20 px-6 bg-gray-50 dark:bg-gray-800/50">
-          <div className="container mx-auto max-w-6xl">
-            <h2 className="text-4xl font-bold mb-4 text-center">Websites I've Tested</h2>
-            <p className="text-center text-gray-600 dark:text-gray-400 mb-12 max-w-2xl mx-auto">
-              Quality assurance experience across diverse platforms and industries
-            </p>
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {testedWebsites.map((website, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="text-xl">{website.title}</CardTitle>
-                    <CardDescription className="text-purple-600 dark:text-purple-400 font-semibold">
-                      {website.type}
-                    </CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-gray-600 dark:text-gray-400 mb-4 text-sm">
-                      {website.description}
-                    </p>
-                    <div className="space-y-1">
-                      <p className="text-sm font-semibold text-gray-700 dark:text-gray-300">Key Areas Tested:</p>
-                      <ul className="text-sm text-gray-600 dark:text-gray-400 space-y-1">
-                        {website.features.map((feature, i) => (
-                          <li key={i} className="flex items-start">
-                            <span className="text-green-600 mr-2">✓</span>
-                            <span>{feature}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+        <section id="tested" className="py-20 px-6">
+          <div className="container mx-auto max-w-4xl">
+            <h2 className="text-4xl font-bold mb-8 text-center">Websites I've Tested</h2>
+
+            {/* Grid with two cards: LootBx then Alacinco */}
+            <div className="grid md:grid-cols-2 gap-6 items-stretch">
+              {testedWebsites.map((site, idx) => {
+                // placeholder card should span the full width on md+ (second row)
+                const wrapperClass = site.placeholder ? 'block h-full md:col-span-2' : 'block h-full';
+                return (
+                  <a
+                    key={idx}
+                    href={site.url || '#'}
+                    target={site.url && site.url !== '#' ? '_blank' : '_self'}
+                    rel={site.url && site.url !== '#' ? 'noopener noreferrer' : undefined}
+                    className={wrapperClass}
+                  >
+                    <Card className="h-full flex flex-col hover:shadow-xl transition-shadow overflow-visible">
+                      <div className="relative">
+                        {site.landing ? (
+                          <img src={site.landing} alt={`${site.title} preview`} className="w-full h-56 sm:h-64 md:h-72 object-cover" />
+                        ) : (
+                          <div className="w-full h-56 sm:h-64 md:h-72 bg-gray-100 dark:bg-gray-800 flex items-center justify-center">
+                            <span className="text-gray-500 dark:text-gray-400 font-semibold">{site.title}</span>
+                          </div>
+                        )}
+
+                        {site.logo && (
+                          <img
+                            src={site.logo}
+                            alt={`${site.title} logo`}
+                            className="absolute left-1/2 transform -translate-x-1/2 -bottom-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full object-cover border-4 border-white dark:border-gray-900 shadow-lg"
+                          />
+                        )}
+                      </div>
+
+                      {/* For placeholder, show centered message */}
+                      {site.placeholder ? (
+                        <CardContent className="pt-12 flex-1 flex items-center justify-center">
+                          <div className="text-center">
+                            <h3 className="text-2xl font-semibold mb-2">More</h3>
+                            <p className="text-sm text-gray-600 dark:text-gray-300">Additional websites tested — will be updated soon.</p>
+                          </div>
+                        </CardContent>
+                      ) : (
+                        <CardContent className={site.logo ? 'pt-12 flex-1' : 'pt-6 flex-1'}>
+                          <div className="flex items-start justify-between">
+                            <div>
+                              <h3 className="text-lg font-semibold">{site.title}</h3>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">{site.type}</p>
+                            </div>
+                            <ExternalLink className="w-5 h-5 text-gray-400" />
+                          </div>
+
+                          <p className="text-sm text-gray-600 dark:text-gray-300 mt-3">{site.description}</p>
+
+                          {site.features && site.features.length > 0 && (
+                            <>
+                              <p className="mt-3 font-semibold text-sm text-gray-700 dark:text-gray-300">Key Areas Tested:</p>
+                              <ul className="list-disc pl-5 mt-1 text-sm text-gray-700 dark:text-gray-300 space-y-1">
+                                {site.features.map((f, i) => (
+                                  <li key={i}>{f}</li>
+                                ))}
+                              </ul>
+                            </>
+                          )}
+                        </CardContent>
+                      )}
+                    </Card>
+                  </a>
+                );
+              })}
             </div>
           </div>
         </section>

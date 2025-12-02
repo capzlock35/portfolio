@@ -1,0 +1,42 @@
+{
+  "name": "react-pixelblast",
+  "version": "1.0.0",
+  "description": "A React project implementing a pixelated background effect using GSAP and Three.js.",
+  "main": "src/index.jsx",
+  "scripts": {
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "keywords": [
+    "react",
+    "three.js",
+    "gsap",
+    "pixel",
+    "background"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "dependencies": {
+    "react": "^17.0.2",
+    "react-dom": "^17.0.2",
+    "three": "^0.132.2",
+    "gsap": "^3.9.1",
+    "react-scripts": "4.0.3"
+  },
+  "devDependencies": {
+    "glslify": "^7.0.0"
+  },
+  "homepage": "https://github.com/yourusername/react-pixelblast#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yourusername/react-pixelblast.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/react-pixelblast/issues"
+  },
+  "engines": {
+    "node": ">=14.0.0"
+  }
+}
