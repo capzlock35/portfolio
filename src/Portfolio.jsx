@@ -1,17 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Moon, Sun, Github, Linkedin, Mail, ExternalLink } from 'lucide-react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
 import { Button } from './components/ui/button';
+import ElectricBorder from './components/ElectricBorder';
+import DecryptedText from './components/DecryptedText';
+// ... (The rest of your code using <DecryptedText />)
 import './Portfolio.css';
 import profilePic from './assets/Pic.jpg'; // use the new Pic.jpg from assets
 import lootLanding from './assets/LootBxLanding.png';
 import lootLogo from './assets/LootBxLogo.jpg';
 import alacincoLanding from './assets/AlacincoLanding.png';
 import alacincoLogo from './assets/AlacincoLogo.png';
-import PixelBlast from '../react-pixelblast/src/components/PixelBlast';
+import resume from './assets/resume.pdf';
+
+
 
 export default function Portfolio() {
   const [darkMode, setDarkMode] = useState(true);
+  const [showLinkModal, setShowLinkModal] = useState(false);
   const [activeSection, setActiveSection] = useState('home');
   const [typedText, setTypedText] = useState('');
   const [isDeleting, setIsDeleting] = useState(false);
@@ -28,6 +34,13 @@ export default function Portfolio() {
     document.body.style.overflow = showUpdateModal ? 'hidden' : '';
     return () => { document.body.style.overflow = ''; };
   }, [showUpdateModal]);
+
+  const handleLinkClick = (e) => {
+  e.preventDefault(); // prevent default navigation
+  setShowLinkModal(true); // open the modal
+};
+
+
 
   // close on Escape
   useEffect(() => {
@@ -128,7 +141,8 @@ export default function Portfolio() {
         { name: 'Jira', url: 'https://www.atlassian.com/software/jira', logo: 'https://cdn.jsdelivr.net/gh/devicons/devicon/icons/jira/jira-original.svg' },
         { name: 'PyCharm', url: 'https://www.jetbrains.com/pycharm/', logo: 'https://logo.clearbit.com/pycharm.jetbrains.com' },
         { name: 'TestRail', url: 'https://www.gurock.com/testrail', logo: 'https://logo.clearbit.com/gurock.com' },
-        { name: 'Bugzilla', url: 'https://www.bugzilla.org/', logo: 'https://logo.clearbit.com/bugzilla.org' }
+        { name: 'Bugzilla', url: 'https://www.bugzilla.org/', logo: 'https://logo.clearbit.com/bugzilla.org' },
+        { name: 'Vercel', url: 'https://vercel.com/', logo: 'https://logo.clearbit.com/vercel.com' }
       ]
     },
     {
@@ -151,29 +165,55 @@ export default function Portfolio() {
 
   const projects = [
     {
-      title: 'E-Commerce Platform',
-      description: 'Full-stack e-commerce application with payment integration and admin dashboard',
-      tech: ['React', 'Node.js', 'MongoDB', 'Stripe'],
+      title: 'Manufacturing Admin',
+      description: 'Full-stack manufacturing management system with admin dashboard for managing production, inventory, and operations.',
+      tech: ['React', 'Node.js', 'MongoDB', 'Express.js', 'Tailwind CSS', 'Daisy UI'],
       link: '#'
     },
     {
-      title: 'Task Management App',
+      title: 'Task Management',
       description: 'Collaborative task management tool with real-time updates and team features',
-      tech: ['Next.js', 'TypeScript', 'Prisma', 'PostgreSQL'],
+      tech: ['HTML', 'CSS', 'JavaScript', 'MySQL'],
       link: '#'
     },
     {
       title: 'Automated Testing Suite',
-      description: 'Comprehensive testing framework for web applications with CI/CD integration',
-      tech: ['Selenium', 'Python', 'Jenkins', 'Docker'],
+      description: 'Comprehensive testing framework for web applications with CI/CD integration.',
+      tech: ['Selenium', 'Python', 'Pytest', 'Playwright'],
       link: '#'
     },
     {
       title: 'Portfolio Website',
-      description: 'Modern portfolio website with animations and responsive design',
-      tech: ['React', 'Tailwind CSS', 'Framer Motion'],
+      description: 'Modern portfolio website with animations and responsive design.',
+      tech: ['React', 'Tailwind CSS', 'Vercel'],
+      link: '#'
+    },
+   {
+      title: 'Interactive Dashboard / Analytics Panel',
+      description: 'Modern, responsive dashboard visualizing data with charts, tables, and filters.',
+      tech: ['React', 'Tailwind CSS', 'API', 'Chart.js', 'JavaScript'],
+      link: '#'
+    },
+    {
+      title: 'E-Commerce / Product Catalog Frontend',
+      description: 'Sleek, responsive storefront with product listings, search, filters, and shopping cart.',
+      tech: ['React', 'Tailwind CSS', 'Shadcn', 'Daisy UI'],
+      link: '#'
+    },
+    {
+      title: 'Weather App',
+      description: 'Real-time weather updates with forecasts for any location.',
+      tech: ['React', 'Tailwind CSS', 'API', 'JavaScript'],
+      link: '#'
+    },
+        {
+      title: 'World Clock',
+      description: 'Displays current time across multiple cities worldwide.',
+      tech: ['React', 'Tailwind CSS',],
       link: '#'
     }
+
+    
   ];
 
   const testedWebsites = [
@@ -258,7 +298,7 @@ export default function Portfolio() {
             className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl p-6 sm:p-8 max-w-md w-full max-h-[90vh] overflow-auto shadow-xl"
           >
             <h3 id="update-modal-title" className="text-lg sm:text-xl font-semibold mb-3 text-center">
-              Some sections are still being updated
+              Some sections are still being updated and need to Fix (Some Bugs and Defect)
             </h3>
             <p className="mb-6 text-center text-sm text-gray-700 dark:text-gray-300">
               Real content and details will be added soon!
@@ -416,13 +456,13 @@ export default function Portfolio() {
             </div>
 
             <div className="flex items-center gap-3">
-              <button
+              {/* <button
                 onClick={() => setDarkMode(!darkMode)}
                 className="p-2 rounded-full hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors"
                 aria-label="Toggle theme"
               >
                 {darkMode ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-              </button>
+              </button> */}
 
               {/* Mobile menu button */}
               <button
@@ -452,36 +492,23 @@ export default function Portfolio() {
         </header>
 
         {/* Hero Section */}
-        <section id="home" className="relative overflow-hidden pt-28 pb-16 px-4 sm:px-6">
-          <div className="absolute inset-0 -z-10">
-            <div style={{ width: '100%', height: '520px', position: 'relative' }}>
-              <PixelBlast
-                variant="circle"
-                pixelSize={6}
-                color="#B19EEF"
-                patternScale={3}
-                patternDensity={1.2}
-                pixelSizeJitter={0.5}
-                enableRipples
-                rippleSpeed={0.4}
-                rippleThickness={0.12}
-                rippleIntensityScale={1.5}
-                liquid
-                liquidStrength={0.12}
-                liquidRadius={1.2}
-                liquidWobbleSpeed={5}
-                speed={0.6}
-                edgeFade={0.25}
-                transparent
-                className="w-full h-full"
-              />
-            </div>
-          </div>
+        <section id="home" className="pt-28 pb-16 px-4 sm:px-6">
           <div className="container mx-auto max-w-5xl">
             <div className="text-center">
-              <h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
-                Hi, I'm <span className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">ABDULWAHID ABDUL</span>
-              </h1>
+<h1 className="text-4xl sm:text-5xl md:text-6xl font-bold mb-4">
+  Hi, I'm{' '}
+  <DecryptedText
+    text="ABDULWAHID ABDUL"
+    animateOn="repeat"          // *** NEW: Tells the component to repeat ***
+    repeatInterval={5000}       // *** NEW: Repeats every 5 seconds (5000ms) ***
+    
+    sequential={true} 
+    speed={100}                  // Optional: Make character speed faster
+    
+    className="bg-linear-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent"
+    parentClassName="inline"
+  />
+</h1>
               <div className="text-base sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-6 h-12 flex items-center justify-center">
                 <span className="mr-2">{typedText}</span>
                 <span className="animate-blink">|</span>
@@ -497,9 +524,13 @@ export default function Portfolio() {
                 >
                   View Projects
                 </Button>
-                <Button size="lg" variant="outline" className="w-full sm:w-auto">
-                  Download CV
-                </Button>
+      <a href={resume} target="_blank" rel="noopener noreferrer">
+        <Button size="lg" variant="outline" className="w-full sm:w-auto">
+          Download CV
+        </Button>
+      </a>
+
+
               </div>
             </div>
           </div>
@@ -565,49 +596,79 @@ export default function Portfolio() {
           </div>
         </section>
 
-        {/* Role Section */}
-        <section id="role" className="py-20 px-6">
-          <div className="container mx-auto max-w-6xl">
-            <h2 className="text-4xl font-bold mb-12 text-center">What I Do</h2>
-            <div className="grid md:grid-cols-2 gap-8">
-              <Card className="border-2 hover:border-blue-600 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-2xl">QA Tester</CardTitle>
-                  <CardDescription>Ensuring Reliability & Quality</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    I apply thorough testing strategies to help deliver stable and reliable applications. I approach QA as an integral part of the development process.
-                  </p>
-                  <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                    <li>• Manual and exploratory testing</li>
-                    <li>• Writing and executing test cases</li>
-                    <li>• Bug reporting and documentation</li>
-                    <li>• Automated testing knowledge Using Pytest,Playwright</li>
-                  </ul>
-                </CardContent>
-              </Card>
+{/* Role Section */}
+<section id="role" className="py-20 px-6">
+  <div className="container mx-auto max-w-6xl">
+    <h2 className="text-4xl font-bold mb-12 text-center">What I Do</h2>
+    <div className="grid md:grid-cols-2 gap-8">
+      
+      {/* 1. QA Tester Card wrapped in ElectricBorder */}
+      <ElectricBorder
+        color="#00A2FF" // Blue border color
+        speed={1.5}     // Slightly faster speed
+        chaos={0.6}
+        thickness={2}
+        // Use inline style to apply a standard border radius (matching the Card's default)
+        style={{ borderRadius: 12 }} 
+      >
+        {/* The Card component is now a child. 
+            We override its default border to prevent double borders, 
+            but keep the background and shape. */}
+        <Card className="border-2 border-transparent hover:border-transparent transition-colors h-full">
+          <CardHeader>
+            <CardTitle className="text-2xl">QA Tester</CardTitle>
+            <CardDescription>Ensuring Reliability & Quality</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              I apply thorough testing strategies to help deliver stable and reliable applications. I approach QA as an integral part of the development process.
+            </p>
+            <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+              <li>• Manual and exploratory testing</li>
+              <li>• Writing and executing test cases</li>
+              <li>• Bug reporting and documentation</li>
+              <li>• Automated testing knowledge Using Pytest,Playwright</li>
+              <li>• And More</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </ElectricBorder>
 
-              <Card className="border-2 hover:border-purple-600 transition-colors">
-                <CardHeader>
-                  <CardTitle className="text-2xl">Front-End Developer</CardTitle>
-                  <CardDescription>Building Interactive & User-Friendly Web Interfaces</CardDescription>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-gray-600 dark:text-gray-400 mb-4">
-                    I create responsive and accessible web applications using modern front-end technologies. I focus on clean, maintainable code and practical user experiences.
-                  </p>
-                  <ul className="space-y-2 text-gray-600 dark:text-gray-400">
-                    <li>• Front-end development with React, Tailwind, Javascript and More.</li>
-                    <li>• Responsive design and mobile-first approach</li>
-                    <li>• UI optimization and accessibility</li>
-                    <li>• Working knowledge of RESTful APIs</li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+      {/* 2. Front-End Developer Card wrapped in ElectricBorder */}
+      <ElectricBorder
+        color="#7C3AED" // Purple border color
+        speed={1.5}     // Slightly faster speed
+        chaos={0.6}
+        thickness={2}
+        // Use inline style to apply a standard border radius (matching the Card's default)
+        style={{ borderRadius: 12 }} 
+      >
+        {/* The Card component is now a child. 
+            We override its default border to prevent double borders, 
+            but keep the background and shape. */}
+        <Card className="border-2 border-transparent hover:border-transparent transition-colors h-full">
+          <CardHeader>
+            <CardTitle className="text-2xl">Front-End Developer</CardTitle>
+            <CardDescription>Building Interactive & User-Friendly Web Interfaces</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-gray-600 dark:text-gray-400 mb-4">
+              I create responsive and accessible web applications using modern front-end technologies. I focus on clean, maintainable code and practical user experiences.
+            </p>
+            <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+              <li>• Front-end development with React, Tailwind, Javascript and More.</li>
+              <li>• Responsive design and mobile-first approach</li>
+              <li>• UI optimization and accessibility</li>
+              <li>• Working knowledge of RESTful APIs</li>
+              <li>• And More</li>
+            </ul>
+          </CardContent>
+        </Card>
+      </ElectricBorder>
+      
+    </div>
+  </div>
+</section>
 
         {/* Skills & Technologies - categorized with logos */}
         <section id="skills" className="py-20 px-6 bg-gray-50 dark:bg-gray-800/50">
@@ -676,31 +737,62 @@ export default function Portfolio() {
             <h2 className="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
             <div className="grid md:grid-cols-2 gap-8">
               {projects.map((project, index) => (
-                <Card key={index} className="hover:shadow-lg transition-shadow">
-                  <CardHeader>
-                    <CardTitle className="flex items-center justify-between">
-                      {project.title}
-                      <ExternalLink className="w-5 h-5 text-gray-400 hover:text-blue-600 cursor-pointer" />
-                    </CardTitle>
-                    <CardDescription>{project.description}</CardDescription>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {project.tech.map((tech, i) => (
-                        <span
-                          key={i}
-                          className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm"
-                        >
-                          {tech}
-                        </span>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <CardTitle className="flex items-center justify-between">
+                    {project.title}
+                    <ExternalLink
+                      className="w-5 h-5 text-gray-400 hover:text-blue-600 cursor-pointer"
+                      onClick={handleLinkClick} // <-- trigger modal here
+                    />
+                  </CardTitle>
+                  <CardDescription>{project.description}</CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <div className="flex flex-wrap gap-2">
+                    {project.tech.map((tech, i) => (
+                      <span
+                        key={i}
+                        className="px-3 py-1 bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 rounded-full text-sm"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </CardContent>
+              </Card>
+
               ))}
             </div>
           </div>
         </section>
+
+              {showLinkModal && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black/50 z-50 px-4">
+          <div className="bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100 rounded-xl p-6 max-w-sm w-full shadow-xl text-center">
+            <h3 className="text-lg font-semibold mb-2">Link Not Available</h3>
+            <p className="mb-4 text-sm">
+              This project link is not available for now. Check my{' '}
+              <a
+                href="https://github.com/capzlock35"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-blue-600 underline"
+              >
+                GitHub
+              </a>{' '}
+              for projects.
+            </p>
+            <button
+              onClick={() => setShowLinkModal(false)}
+              className="px-4 py-2 bg-gray-200 dark:bg-gray-800 rounded-md hover:bg-gray-300 dark:hover:bg-gray-700"
+            >
+              Close
+            </button>
+          </div>
+        </div>
+      )}
+
 
         {/* Websites Tested Section */}
         <section id="tested" className="py-20 px-6">
@@ -788,12 +880,18 @@ export default function Portfolio() {
               Let's create something amazing together!
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" variant="secondary" className="bg-white text-blue-600 hover:bg-gray-100">
-                Get In Touch
-              </Button>
-              <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
+            <Button
+              size="lg"
+              variant="secondary"
+              className="bg-white text-blue-600 hover:bg-gray-100"
+              onClick={() => setShowEmailModal(true)} // <-- open the modal
+            >
+              Get In Touch
+            </Button>
+
+              {/* <Button size="lg" variant="outline" className="border-white text-white hover:bg-white/10">
                 Schedule a Call
-              </Button>
+              </Button> */}
             </div>
           </div>
         </section>
